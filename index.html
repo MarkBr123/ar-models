@@ -2,21 +2,14 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <script type="module"
-    src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-  </script>
-
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
-    body { margin:0; display:flex; flex-direction: column; align-items:center; font-family:sans-serif; }
-    model-viewer { width: 90%; height: 60vh; margin-top:20px; border:1px solid #ccc; border-radius:12px; }
-    .model-buttons { margin-top: 15px; }
-    .model-buttons button { margin: 0 10px; padding: 10px 20px; cursor: pointer; border-radius: 6px; border: none; background: #007bff; color: white; font-weight: bold; }
-    .model-buttons button:hover { background: #0056b3; }
+    body { margin:0; text-align:center; }
+    model-viewer { width: 100%; height: 80vh; }
+    button { margin: 10px; padding: 10px 20px; }
   </style>
 </head>
 <body>
-
-<h2>Click a model to view</h2>
 
 <model-viewer
   id="modelViewer"
@@ -29,7 +22,7 @@
   <button slot="ar-button">View in your space</button>
 </model-viewer>
 
-<div class="model-buttons">
+<div>
   <button onclick="changeModel('KAM-55CMC32.glb')">Model 1</button>
   <button onclick="changeModel('KAM-75DRC32.glb')">Model 2</button>
   <button onclick="changeModel('LGLA080GC2.glb')">Model 3</button>
@@ -37,7 +30,6 @@
 
 <script>
   const viewer = document.getElementById('modelViewer');
-
   function changeModel(fileName) {
     viewer.src = `https://markbr123.github.io/ar-models/${fileName}`;
   }
