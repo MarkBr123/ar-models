@@ -8,9 +8,10 @@
 
   <style>
     body { margin:0; display:flex; flex-direction: column; align-items:center; font-family:sans-serif; }
-    model-viewer { width: 90%; height: 60vh; margin-top:20px; }
-    .model-buttons { margin-top: 10px; }
-    .model-buttons button { margin: 0 10px; padding: 10px 20px; cursor: pointer; }
+    model-viewer { width: 90%; height: 60vh; margin-top:20px; border:1px solid #ccc; border-radius:12px; }
+    .model-buttons { margin-top: 15px; }
+    .model-buttons button { margin: 0 10px; padding: 10px 20px; cursor: pointer; border-radius: 6px; border: none; background: #007bff; color: white; font-weight: bold; }
+    .model-buttons button:hover { background: #0056b3; }
   </style>
 </head>
 <body>
@@ -30,8 +31,8 @@
 
 <div class="model-buttons">
   <button onclick="changeModel('KAM-55CMC32.glb')">Model 1</button>
-  <button onclick="changeModel('Model4.glb')">Model 4</button>
-  <button onclick="changeModel('Model5.glb')">Model 5</button>
+  <button onclick="changeModel('KAM-75DRC32.glb')">Model 2</button>
+  <button onclick="changeModel('LGLA080GC2.glb')">Model 3</button>
 </div>
 
 <script>
