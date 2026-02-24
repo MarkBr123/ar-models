@@ -2,14 +2,14 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>AR Test with Multiple Models</title>
+  <title>AR Model Selector</title>
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
-    body { margin: 0; background: #f5f5f5; font-family: Arial, sans-serif; display: flex; flex-direction: column; height: 100vh; }
-    .model-buttons { display: flex; gap: 10px; padding: 10px; justify-content: center; background: #fff; }
-    button { padding: 10px 15px; cursor: pointer; border: 1px solid #ccc; border-radius: 5px; background: #f0f0f0; font-size: 16px; }
-    button.active { background: #007bff; color: white; border-color: #0056b3; }
-    model-viewer { flex: 1; width: 100%; height: 100%; }
+    body { margin:0; background:#f5f5f5; display:flex; flex-direction:column; height:100vh; font-family: Arial, sans-serif; }
+    .model-buttons { display:flex; gap:10px; padding:10px; justify-content:center; background:#fff; }
+    button { padding:10px 15px; cursor:pointer; border:1px solid #ccc; border-radius:5px; background:#f0f0f0; font-size:16px; }
+    button.active { background:#007bff; color:white; border-color:#0056b3; }
+    model-viewer { flex:1; width:100%; height:100%; }
   </style>
 </head>
 <body>
@@ -18,7 +18,7 @@
 
 <model-viewer
   id="modelViewer"
-  src="Model1.glb"
+  src="https://markbr123.github.io/ar-models/Model1.glb"
   ar
   ar-modes="webxr scene-viewer quick-look"
   ar-placement="floor"
@@ -28,12 +28,13 @@
 </model-viewer>
 
 <script>
+  const baseURL = "https://markbr123.github.io/ar-models/";
   const models = [
-    { path: "Model1.glb", label: "Model 1" },
-    { path: "Model2.glb", label: "Model 2" },
-    { path: "Model3.glb", label: "Model 3" },
-    { path: "Model4.glb", label: "Model 4" },
-    { path: "Model5.glb", label: "Model 5" }
+    { path: baseURL + "Model1.glb", label: "Model 1" },
+    { path: baseURL + "Model2.glb", label: "Model 2" },
+    { path: baseURL + "Model3.glb", label: "Model 3" },
+    { path: baseURL + "Model4.glb", label: "Model 4" },
+    { path: baseURL + "Model5.glb", label: "Model 5" }
   ];
 
   const buttonsDiv = document.getElementById("buttons");
@@ -52,7 +53,6 @@
       viewer.setAttribute("src", model.path);
     });
 
-    // Make first button active by default
     if (!activeButton) {
       btn.classList.add("active");
       activeButton = btn;
