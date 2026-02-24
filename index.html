@@ -26,6 +26,7 @@
   ar-placement="floor"
   ar-scale="auto"
   camera-controls>
+  
 
   <button slot="ar-button">View in your space</button>
   <button id="repositionBtn" onclick="startReposition()">Move to new spot</button>
@@ -33,10 +34,12 @@
 
 <script>
 function startReposition() {
+
   const modelViewer = document.getElementById('modelViewer');
   modelViewer.activateAR(); 
+}
 </script>
-  
+
 <div class="model-buttons">
   <button onclick="changeModel('KAM-55CMC32.glb')">Model 1</button>
   <button onclick="changeModel('KAM-75DRC32.glb')">Model 2</button>
