@@ -89,14 +89,11 @@
       btn.classList.add("active");
       activeButton = btn;
 
-      // Encode URL for safety
-      const encodedPath = encodeURI(model.path);
+      // Encode URL properly
+      const encodedPath = model.path.split("/").map(segment => encodeURIComponent(segment)).join("/");
 
-      // Force reload model
-      viewer.removeAttribute("src");
-      setTimeout(() => {
-        viewer.src = encodedPath;
-      }, 50);
+      // Use setAttribute instead of remove + src for reliable reload
+      viewer.setAttribute("src", encodedPath);
     });
 
     // Set first button as active by default
