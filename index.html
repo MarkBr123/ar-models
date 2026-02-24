@@ -18,7 +18,7 @@
 
 <model-viewer
   id="modelViewer"
-  src="models/Model%201.glb"
+  src="models/Model1.glb"
   ar
   ar-modes="webxr scene-viewer quick-look"
   ar-placement="floor"
@@ -29,11 +29,11 @@
 
 <script>
   const models = [
-    { path: "models/Model 1.glb", label: "Model 1" },
-    { path: "models/Model 2.glb", label: "Model 2" },
-    { path: "models/Model 3.glb", label: "Model 3" },
-    { path: "models/Model 4.glb", label: "Model 4" },
-    { path: "models/Model 5.glb", label: "Model 5" }
+    { path: "models/Model1.glb", label: "Model 1" },
+    { path: "models/Model2.glb", label: "Model 2" },
+    { path: "models/Model3.glb", label: "Model 3" },
+    { path: "models/Model4.glb", label: "Model 4" },
+    { path: "models/Model5.glb", label: "Model 5" }
   ];
 
   const buttonsDiv = document.getElementById("buttons");
@@ -50,9 +50,8 @@
       btn.classList.add("active");
       activeButton = btn;
 
-      // Encode the path to handle spaces
-      const encodedPath = model.path.split("/").map(segment => encodeURIComponent(segment)).join("/");
-      viewer.setAttribute("src", encodedPath);
+      // Set model src directly
+      viewer.setAttribute("src", model.path);
     });
 
     if (!activeButton) {
