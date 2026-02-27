@@ -1,39 +1,322 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <style>
-    body { margin:0; text-align:center; }
-    model-viewer { width: 100%; height: 80vh; }
-    button { margin: 10px; padding: 10px 20px; }
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    }
+    body {
+      margin: 0;
+      background: #f5f7fa;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #viewer-section {
+      flex: 0 0 auto;
+      background: #1a1e2b;
+    }
+    model-viewer {
+      width: 100%;
+      height: 50vh;
+      min-height: 320px;
+      background-color: #2b2f3a;
+      --progress-bar-color: #ffb74d;
+    }
+    /* Button panel — scrollable, categorized */
+    #button-panel {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      padding: 16px 20px 20px;
+      background: #ffffff;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
+    }
+    .category {
+      margin-bottom: 28px;
+    }
+    .category h3 {
+      margin: 0 0 12px 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1e2b3a;
+      border-left: 4px solid #3f6b9c;
+      padding-left: 12px;
+      letter-spacing: 0.3px;
+    }
+    .button-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .model-btn {
+      background: #f0f3f8;
+      border: 1px solid #d9e0e8;
+      border-radius: 40px;
+      padding: 8px 18px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #1f2a3f;
+      cursor: pointer;
+      transition: 0.15s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      white-space: nowrap;
+      max-width: 280px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .model-btn:hover {
+      background: #e1e9f2;
+      border-color: #8aa9cc;
+      transform: translateY(-1px);
+    }
+    .model-btn:active {
+      background: #cad8e9;
+      transform: translateY(0);
+    }
+    .model-btn.selected {
+      background: #1e3b5c;
+      border-color: #0a1c2c;
+      color: white;
+      font-weight: 500;
+      box-shadow: 0 4px 8px rgba(0,60,130,0.2);
+    }
+    /* tiny badge count */
+    .badge {
+      background: #6c86a3;
+      color: white;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: 0.7rem;
+      margin-left: 10px;
+    }
+    footer {
+      font-size: 0.7rem;
+      color: #7b8b9f;
+      text-align: center;
+      padding: 8px 0 4px;
+      border-top: 1px solid #eef2f6;
+    }
   </style>
+  <title>AR model wall · all units</title>
 </head>
 <body>
 
-<model-viewer
-  id="modelViewer"
-  src="https://markbr123.github.io/ar-models/KAM-55CMC32.glb"
-  ar
-  ar-modes="webxr scene-viewer quick-look"
-  ar-placement="floor"
-  ar-scale="auto"
-  camera-controls>
-  <button slot="ar-button">View in your space</button>
-</model-viewer>
+  <!-- MODEL VIEWER (fixed top area) -->
+  <div id="viewer-section">
+    <model-viewer
+      id="modelViewer"
+      src="https://markbr123.github.io/ar-models/KAM-55CMC32.glb"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      ar-placement="floor"
+      ar-scale="auto"
+      camera-controls
+      exposure="0.8"
+      shadow-intensity="0.3"
+      autoplay
+      environment-image="neutral">
+      <!-- built-in AR button positioned inside viewer -->
+      <button slot="ar-button" style="background:#2b4f77; color:white; border:none; border-radius:28px; padding:10px 24px; font-weight:500; box-shadow:0 2px 10px rgba(0,0,0,0.2);">
+        👁️ View in your space
+      </button>
+    </model-viewer>
+  </div>
 
-<div>
-  <button onclick="changeModel('KAM-55CMC32.glb')">Model 1</button>
-  <button onclick="changeModel('KAM-75DRC32.glb')">Model 2</button>
-  <button onclick="changeModel('LGLA080GC2.glb')">Model 3</button>
-</div>
+  <!-- BUTTONS (scrollable, categorized, all models included) -->
+  <div id="button-panel">
+    <!-- category: Tosot / Fujidenzo (split for readability) -->
+    <div class="category">
+      <h3>❄️ Tosot · Fujidenzo (inverter/window type)</h3>
+      <div class="button-grid" data-cat="tosol">
+        <!-- manually collected from your list -->
+        <button class="model-btn" data-file="Tosot-supracol-inverter.glb">Tosot supracol inverter</button>
+        <button class="model-btn" data-file="fujidenzo_war100igt_with_remote.glb">fujidenzo WAR100IGT + remote</button>
+        <button class="model-btn" data-file="fujidenzo-wam632igt.glb">fujidenzo WAM632IGT</button>
+        <button class="model-btn" data-file="fujidenzo-war632igt.glb">fujidenzo WAR632IGT</button>
+        <button class="model-btn" data-file="WAR100IGT_with_remote.glb">WAR100IGT with remote</button>
+        <button class="model-btn" data-file="WAR632IGT.glb">WAR632IGT</button>
+        <button class="model-btn" data-file="WAM632IGT.glb">WAM632IGT</button>
+      </div>
+    </div>
 
-<script>
-  const viewer = document.getElementById('modelViewer');
-  function changeModel(fileName) {
-    viewer.src = `https://markbr123.github.io/ar-models/${fileName}`;
-  }
-</script>
+    <div class="category">
+      <h3>🌀 Gree · Kolin · KOLIN premium</h3>
+      <div class="button-grid">
+        <button class="model-btn" data-file="gree-full-dc-inverter-1and1.5hp.glb">Gree full DC inverter 1&amp;1.5HP</button>
+        <button class="model-btn" data-file="KOLIN KAM-75DRC32.glb">KOLIN KAM-75DRC32</button>
+        <button class="model-btn" data-file="Kolin_Premium_primus_gold.glb">Kolin Premium Primus Gold</button>
+        <button class="model-btn" data-file="Kolin KAG75WCINV, KAG100WCINV, KAG....glb">Kolin KAG75/100 inverter series</button>
+        <button class="model-btn" data-file="KAM-75DRC32.glb">KAM-75DRC32</button>
+        <button class="model-btn" data-file="KAM-55CMC32.glb">KAM-55CMC32</button>
+      </div>
+    </div>
+
+    <div class="category">
+      <h3>🏭 Daikin (D‑Series · King · Queen)</h3>
+      <div class="button-grid">
+        <button class="model-btn" data-file="daikin-D-Series-FTKQ25BVA-1Hp.glb">Daikin D‑Series FTKQ25BVA (1HP)</button>
+        <button class="model-btn" data-file="daikin-D-Series-FTKQ35BVA-1.5-2Hp.glb">Daikin D‑Series FTKQ35BVA (1.5-2HP)</button>
+        <button class="model-btn" data-file="daikin-D-Series-FTKQ60BVA-FTKQ71BVA.glb">Daikin D‑Series FTKQ60/71BVA</button>
+        <button class="model-btn" data-file="daikin-king-series-1-1.5hp.glb">Daikin King Series 1-1.5HP</button>
+        <button class="model-btn" data-file="daikin-king-series-2-3hp.glb">Daikin King Series 2-3HP</button>
+        <button class="model-btn" data-file="daikin-queen-ava-1-1.5hp.glb">Daikin Queen AVA 1-1.5HP</button>
+        <button class="model-btn" data-file="daikin-queen-ava-2-2.5hp.glb">Daikin Queen AVA 2-2.5HP</button>
+      </div>
+    </div>
+
+    <div class="category">
+      <h3>Ⓜ️ Carrier · Nexus · miscellaneous</h3>
+      <div class="button-grid">
+        <button class="model-btn" data-file="WCARJ012EEV CARRIER 1.5HP.glb">CARRIER WCARJ012EEV 1.5HP</button>
+        <button class="model-btn" data-file="carrier_aura_inverter_1-1.5hp.glb">Carrier Aura Inverter 1-1.5HP</button>
+        <button class="model-btn" data-file="carrier_aura_inverter_2.5hp.glb">Carrier Aura Inverter 2.5HP</button>
+        <button class="model-btn" data-file="carrier_aura_inverter_2hp.glb">Carrier Aura Inverter 2HP</button>
+        <button class="model-btn" data-file="Nexus 2.5Hp.glb">Nexus 2.5HP</button>
+        <button class="model-btn" data-file="Nexus 2Hp.glb">Nexus 2HP</button>
+        <button class="model-btn" data-file="Nexus+1-1.5Hp.glb">Nexus 1-1.5HP</button>
+      </div>
+    </div>
+
+    <div class="category">
+      <h3>📦 LG · Kolin (extra) · sample</h3>
+      <div class="button-grid">
+        <button class="model-btn" data-file="LGLA080GC2.glb">LG LA080GC2</button>
+        <button class="model-btn" data-file="sample_WAR100IGT_with_remote.glb">sample WAR100IGT with remote</button>
+        <!-- just in case any missing from above -->
+        <button class="model-btn" data-file="fujidenzo-wam632igt.glb" style="display:none;">(dup)</button> <!-- already present -->
+      </div>
+    </div>
+
+    <!-- also include any remaining from the raw list: verify all filenames unique 
+         I'll add a small hidden fallback note but everything should be covered. 
+         Manual count: I've included 29 unique buttons (including duplicates filtered). 
+         Your list had ~35 lines but some are duplicates or incomplete names.
+         I'll add a quick duplicate check: 
+    -->
+
+    <!-- extra row with uncategorized if needed (just to be safe) -->
+    <div class="category" style="opacity:0.9;">
+      <h3>📌 all other / exact filenames</h3>
+      <div class="button-grid">
+        <!-- Ensure all distinct entries from your prompt that might have been missed:
+        "Tosot-supracol-inverter.glb" (done)
+        "fujidenzo_war100igt_with_remote.glb" (done)
+        "fujidenzo-wam632igt.glb" (done)
+        "fujidenzo-war632igt.glb" (done)
+        "gree-full-dc-inverter-1and1.5hp.glb" (done)
+        "KOLIN KAM-75DRC32.glb" (done)
+        "Kolin_Premium_primus_gold.glb" (done)
+        "sample_WAR100IGT_with_remote.glb" (done)
+        "WAR100IGT_with_remote.glb" (done)
+        "WAR632IGT.glb" (done)
+        "daikin-D-Series-FTKQ25BVA-1Hp.glb" (done)
+        "daikin-D-Series-FTKQ35BVA-1.5-2Hp.glb" (done)
+        "daikin-D-Series-FTKQ60BVA-FTKQ71BVA.glb" (done)
+        "daikin-king-series-1-1.5hp.glb" (done)
+        "daikin-king-series-2-3hp.glb" (done)
+        "daikin-queen-ava-1-1.5hp.glb" (done)
+        "daikin-queen-ava-2-2.5hp.glb" (done)
+        "WAM632IGT.glb" (done)
+        "WCARJ012EEV CARRIER 1.5HP.glb" (done)
+        "carrier_aura_inverter_1-1.5hp.glb" (done)
+        "carrier_aura_inverter_2.5hp.glb" (done)
+        "carrier_aura_inverter_2hp.glb" (done)
+        "Nexus 2.5Hp.glb" (done)
+        "Nexus 2Hp.glb" (done)
+        "Nexus+1-1.5Hp.glb" (done)
+        "LGLA080GC2.glb" (done)
+        "KAM-75DRC32.glb" (done)
+        "Kolin KAG75WCINV, KAG100WCINV, KAG....glb" (done)
+        "KAM-55CMC32.glb" (done)
+        -->
+        <button class="model-btn" data-file="Kolin KAG75WCINV, KAG100WCINV, KAG....glb">Kolin KAG75/100 (duplicate entry)</button>
+        <!-- but to avoid visual clutter, I'll hide duplicates? I'll keep one visible. I already added that one above. I'll make this a tiny fallback -->
+      </div>
+      <p style="font-size:0.75rem; color:#809ab3; margin:4px 0 0 12px;">✓ All models from list are included — use buttons above</p>
+    </div>
+  </div>
+
+  <footer>— tap any model to load in 3D viewer —</footer>
+
+  <script>
+    (function() {
+      const viewer = document.getElementById('modelViewer');
+      const baseUrl = 'https://markbr123.github.io/ar-models/';
+      
+      // get all buttons with data-file attribute (excluding any hidden duplicates)
+      const allButtons = document.querySelectorAll('.model-btn[data-file]');
+      
+      // store filenames to avoid duplicate listeners (just in case)
+      const handled = new Set();
+
+      // function to set model and update selected style
+      function changeModel(fileName, clickedBtn) {
+        if (!fileName) return;
+        // update src
+        viewer.src = baseUrl + fileName;
+        // remove selected class from all buttons
+        allButtons.forEach(btn => btn.classList.remove('selected'));
+        // add selected class to the clicked button (if provided)
+        if (clickedBtn) {
+          clickedBtn.classList.add('selected');
+        } else {
+          // if called externally, try to find button by filename
+          allButtons.forEach(btn => {
+            if (btn.dataset.file === fileName) btn.classList.add('selected');
+          });
+        }
+        // optional: log
+        console.log('Loading:', fileName);
+      }
+
+      // attach click handlers
+      allButtons.forEach(btn => {
+        const file = btn.dataset.file;
+        if (!file || handled.has(file)) {
+          // avoid double attaching to the same visual button (but we can keep them if visible)
+          // but it's ok — they point to same file; just prevent duplicate clicks effect
+          // but we want all buttons to work. we'll still attach but they will toggle selected.
+        }
+        handled.add(file);
+        
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          changeModel(file, btn);
+        });
+      });
+
+      // set initial selected: find button matching default model (KAM-55CMC32.glb)
+      const defaultFile = 'KAM-55CMC32.glb';
+      allButtons.forEach(btn => {
+        if (btn.dataset.file === defaultFile) {
+          btn.classList.add('selected');
+        }
+      });
+      // ensure viewer src is exactly default (already set in html, but just in case)
+      viewer.src = baseUrl + defaultFile;
+
+      // (Optional) if any button has text duplicate but different filename, that's fine.
+      // Also include the weirdly named file with spaces: handle properly
+      // The file names with spaces should work with encodeURI, but model-viewer handles it.
+      // For safety, we do not encode the whole URL; the src assignment uses raw string.
+      // But if a filename has spaces, it's okay; browser encodes automatically.
+      
+      // small improvement: if any button is mis-cased, keep as is.
+    })();
+  </script>
+
+  <!-- tiny style to make scrollbar nicer -->
+  <style>
+    #button-panel::-webkit-scrollbar { width: 6px; }
+    #button-panel::-webkit-scrollbar-track { background: #f0f2f5; }
+    #button-panel::-webkit-scrollbar-thumb { background: #b3c4d8; border-radius: 8px; }
+  </style>
 
 </body>
 </html>
