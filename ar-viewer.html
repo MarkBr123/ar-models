@@ -29,20 +29,25 @@ model-viewer {
     border: 1px solid #4a90e2;
 }
 
-/* QR container */
-.qr-container{
-    position:absolute;
-    bottom:100px;
-    right:20px;
-    background:rgba(0,0,0,0.75);
-    padding:15px;
-    border-radius:10px;
-    text-align:center;
-    color:white;
+.qr-container {
+    position: fixed;        /* fixed stays on screen even when scrolling */
+    bottom: 20px;           /* closer to bottom */
+    right: 20px;            /* right margin */
+    background: rgba(0,0,0,0.75);
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    z-index: 200;           /* above everything */
 }
 
-#qrcode{
-    margin-top:10px;
+@media (max-width: 768px) {
+    .qr-container {
+        right: auto;        /* center on small screens */
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 100px;      /* move above AR button */
+    }
 }
 </style>
 
