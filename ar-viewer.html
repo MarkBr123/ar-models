@@ -36,7 +36,6 @@
             border: 1px solid #4a90e2;
         }
         
-        /* CENTERED QR CONTAINER */
         .qr-container {
             position: fixed;
             top: 50%;
@@ -53,22 +52,10 @@
             width: 90%;
         }
         
-        .qr-container div:first-child {
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #333;
-            font-size: 18px;
-        }
-        
         #qrcode {
             margin: 0 auto;
             width: 220px !important;
             height: 220px !important;
-        }
-        
-        #qrcode img {
-            width: 100%;
-            height: 100%;
         }
         
         .model-name {
@@ -78,16 +65,29 @@
             font-weight: 500;
         }
         
-        /* Hide QR on mobile */
         @media (max-width: 768px) {
             .qr-container {
                 display: none;
             }
         }
+
+        .loading {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            color: white;
+            background: rgba(0,0,0,0.7);
+            padding: 10px 20px;
+            border-radius: 30px;
+            z-index: 150;
+        }
     </style>
 </head>
 <body>
     <a href="javascript:history.back()" class="back-btn">← Back</a>
+    
+    <div class="loading" id="loading">Loading 3D Model...</div>
     
     <model-viewer 
         id="viewer"
@@ -101,7 +101,7 @@
         
         <button slot="ar-button" 
             style="background:#4a90e2; color:white; border:none; border-radius:40px; padding:15px 30px; position:absolute; bottom:30px; left:50%; transform:translateX(-50%); font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.5);">
-            📱 VIEW IN AR
+            📱 TAP HERE TO VIEW IN AR
         </button>
     </model-viewer>
     
@@ -109,45 +109,86 @@
         <div>📱 SCAN TO VIEW IN AR</div>
         <div id="qrcode"></div>
         <div class="model-name" id="modelName"></div>
-        <div style="font-size:12px; margin-top:8px; color:#999;">Use your phone camera to scan</div>
     </div>
     
     <script>
+        // Map SKU codes to actual filenames in your GitHub
+        const modelMap = {
+            "CAR-SPL00001": "carrier_aura_inverter_1-1.5hp.glb",
+            "DAI-SPL00001": "daikin-kings-series-1-1.5hp.glb",
+            "KOP-SPL00001": "kolin-certus-premium-1.5hp.glb",
+            "LGC-SPL00001": "lg_dual_inverter_premium.glb",
+            "PAN-SPL00001": "panasonic_model.glb" // Update with actual filename
+        };
+        
         // Get model from URL parameter
         const urlParams = new URLSearchParams(window.location.search);
-        let model = urlParams.get('model');
+        let sku = urlParams.get('model');
         
         // Default if no model specified
-        if (!model) {
-            model = "CAR-SPL00001";
+        if (!sku || !modelMap[sku]) {
+            sku = "CAR-SPL00001";
         }
         
+        // Get actual filename from map
+        const filename = modelMap[sku] || `${sku}.glb`;
+        
         // Display model name
-        document.getElementById('modelName').textContent = model;
+        document.getElementById('modelName').textContent = sku;
         
         // Set the model in model-viewer
         const viewer = document.getElementById('viewer');
-        viewer.src = `https://markbr123.github.io/ar-models/models/${model}.glb`;
+        const loading = document.getElementById('loading');
+        
+        // Try multiple paths
+        const paths = [
+            `https://markbr123.github.io/ar-models/models/${filename}`,
+            `https://markbr123.github.io/ar-models/${filename}`,
+            `https://markbr123.github.io/ar-models/models/${sku}.glb`
+        ];
+        
+        let pathIndex = 0;
+        
+        function loadNextPath() {
+            if (pathIndex < paths.length) {
+                console.log('Loading:', paths[pathIndex]);
+                viewer.src = paths[pathIndex];
+                pathIndex++;
+            } else {
+                loading.textContent = '❌ Model not found';
+                loading.style.background = 'rgba(255,0,0,0.7)';
+            }
+        }
+        
+        viewer.addEventListener('load', () => {
+            console.log('✅ Model loaded!');
+            loading.style.display = 'none';
+        });
+        
+        viewer.addEventListener('error', () => {
+            console.log('❌ Failed, trying next path...');
+            loadNextPath();
+        });
+        
+        // Start loading
+        loadNextPath();
         
         // Generate QR code
-        function generateQR(modelName) {
+        function generateQR(sku) {
             const qrContainer = document.getElementById("qrcode");
             qrContainer.innerHTML = "";
             
-            const currentUrl = `https://markbr123.github.io/ar-models/ar-viewer.html?model=${modelName}`;
+            const currentUrl = `https://markbr123.github.io/ar-models/ar-viewer.html?model=${sku}`;
             
             new QRCode(qrContainer, {
                 text: currentUrl,
                 width: 220,
                 height: 220,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
         }
         
-        // Generate QR when page loads
-        generateQR(model);
+        generateQR(sku);
     </script>
 </body>
 </html>
