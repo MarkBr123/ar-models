@@ -112,15 +112,15 @@
     </div>
     
     <script>
-    // Map SKU codes to actual filenames in your GitHub
+
+// Map SKU codes to actual filenames in your GitHub
 const modelMap = {
     "CAR-SPL00001": "CAR-SPL00001.glb",
-    "DAI-SPL00001": "DAI-SPL00001.glb", 
+    "DAI-SPL00001": "daikin-D-Series-FTKQ25BVA-1Hp.glb",  // Updated
     "KOP-SPL00001": "KOP-SPL00001.glb",
     "LGC-SPL00001": "LGC-SPL00001.glb",
-    "PAN-SPL00001": "PAN-SPL00001.glb"  // This should now work with the new file
+    "PAN-SPL00001": "panasonic_premium_inverter_xu_series_1-1.5hp.glb"  // Updated
 };
-        
         // Get model from URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         let sku = urlParams.get('model');
