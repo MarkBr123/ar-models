@@ -36,29 +36,34 @@
             border: 1px solid #4a90e2;
         }
         
+        /* CENTERED QR CONTAINER */
         .qr-container {
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background: white;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 25px;
+            border-radius: 15px;
             text-align: center;
             z-index: 200;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            border: 2px solid #4a90e2;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 3px solid #4a90e2;
+            max-width: 280px;
+            width: 90%;
         }
         
         .qr-container div:first-child {
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: #333;
+            font-size: 18px;
         }
         
         #qrcode {
             margin: 0 auto;
-            width: 200px !important;
-            height: 200px !important;
+            width: 220px !important;
+            height: 220px !important;
         }
         
         #qrcode img {
@@ -67,11 +72,13 @@
         }
         
         .model-name {
-            font-size: 12px;
-            margin-top: 8px;
+            font-size: 14px;
+            margin-top: 12px;
             color: #666;
+            font-weight: 500;
         }
         
+        /* Hide QR on mobile */
         @media (max-width: 768px) {
             .qr-container {
                 display: none;
@@ -99,9 +106,10 @@
     </model-viewer>
     
     <div class="qr-container">
-        <div>📱 Scan to View in AR</div>
+        <div>📱 SCAN TO VIEW IN AR</div>
         <div id="qrcode"></div>
         <div class="model-name" id="modelName"></div>
+        <div style="font-size:12px; margin-top:8px; color:#999;">Use your phone camera to scan</div>
     </div>
     
     <script>
@@ -130,8 +138,8 @@
             
             new QRCode(qrContainer, {
                 text: currentUrl,
-                width: 200,
-                height: 200,
+                width: 220,
+                height: 220,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
