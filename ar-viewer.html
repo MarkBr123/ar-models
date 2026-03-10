@@ -30,15 +30,16 @@ model-viewer {
 }
 
 .qr-container {
-    position: fixed;        /* fixed stays on screen even when scrolling */
-    bottom: 20px;           /* closer to bottom */
-    right: 20px;            /* right margin */
+    position: fixed;                /* stays in place */
+    bottom: 150px;                  /* above the AR button */
+    left: 50%;                      /* center horizontally */
+    transform: translateX(-50%);    /* exact center */
     background: rgba(0,0,0,0.75);
     padding: 12px;
     border-radius: 10px;
     text-align: center;
     color: white;
-    z-index: 200;           /* above everything */
+    z-index: 200;
 }
 
 @media (max-width: 768px) {
