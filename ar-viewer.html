@@ -11,6 +11,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body { 
             margin: 0; 
             padding: 0;
@@ -24,28 +30,27 @@
         model-viewer { 
             width: 100%; 
             height: 100vh; 
-            --progress-bar-color: #4a90e2;
-            --progress-bar-height: 5px;
+            background: #030c1a;
         }
         
         .back-btn {
-            position: absolute; 
+            position: fixed; 
             top: 20px; 
             left: 20px;
-            background: rgba(0,0,0,0.7); 
+            background: rgba(0,0,0,0.8); 
             color: white;
             padding: 10px 20px; 
             border-radius: 30px;
             text-decoration: none; 
             z-index: 1000;
-            border: 1px solid #4a90e2;
+            border: 2px solid #4a90e2;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
         }
         
-        /* QR Container - Top Right for Desktop */
+        /* QR Container - Desktop Only */
         .qr-container {
             position: fixed;
             top: 80px;
@@ -62,8 +67,8 @@
         
         #qrcode {
             margin: 0 auto;
-            width: 180px !important;
-            height: 180px !important;
+            width: 170px !important;
+            height: 170px !important;
         }
         
         .qr-container .label {
@@ -78,7 +83,6 @@
             margin-top: 10px;
             color: #333;
             font-weight: 500;
-            word-break: break-all;
         }
         
         /* Hide QR on mobile */
@@ -89,48 +93,39 @@
         }
 
         .loading {
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             color: white;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.9);
             padding: 12px 24px;
             border-radius: 40px;
             z-index: 500;
             font-size: 14px;
-            border: 1px solid #4a90e2;
+            border: 2px solid #4a90e2;
         }
 
-        /* AR Button Styling - FIXED for mobile */
+        /* SIMPLE AR BUTTON STYLING - This will work */
         .ar-button {
-            background: #4a90e2 !important;
-            color: white !important;
-            border: 2px solid white !important;
-            border-radius: 40px !important;
-            padding: 16px 32px !important;
-            font-size: 18px !important;
-            font-weight: bold !important;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6) !important;
-            cursor: pointer !important;
-            display: block !important;
-            margin: 0 auto !important;
-            width: auto !important;
-            min-width: 200px !important;
             position: fixed !important;
             bottom: 30px !important;
             left: 50% !important;
             transform: translateX(-50%) !important;
-            z-index: 2000 !important;
+            background: #4a90e2 !important;
+            color: white !important;
+            border: 3px solid white !important;
+            border-radius: 50px !important;
+            padding: 16px 32px !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8) !important;
+            cursor: pointer !important;
+            z-index: 9999 !important;
+            width: auto !important;
+            min-width: 220px !important;
             text-align: center !important;
-            backdrop-filter: blur(5px) !important;
-            -webkit-backdrop-filter: blur(5px) !important;
-            transition: all 0.3s ease !important;
-        }
-
-        .ar-button:hover {
-            background: #3570b0 !important;
-            transform: translateX(-50%) scale(1.05) !important;
+            letter-spacing: 1px !important;
         }
 
         /* Mobile optimization */
@@ -138,15 +133,9 @@
             .ar-button {
                 padding: 14px 28px !important;
                 font-size: 16px !important;
-                min-width: 180px !important;
+                min-width: 200px !important;
                 bottom: 25px !important;
-            }
-            
-            .back-btn {
-                font-size: 12px;
-                padding: 8px 16px;
-                top: 15px;
-                left: 15px;
+                border-width: 2px !important;
             }
         }
 
@@ -155,27 +144,27 @@
             .ar-button {
                 padding: 12px 24px !important;
                 font-size: 14px !important;
-                min-width: 160px !important;
+                min-width: 180px !important;
                 bottom: 20px !important;
             }
         }
 
-        /* Make sure model-viewer doesn't block the button */
+        /* Hide any default AR button */
         model-viewer::part(default-ar-button) {
             display: none !important;
         }
     </style>
 </head>
 <body>
-    <a href="javascript:history.back()" class="back-btn">← Back to Product</a>
+    <a href="javascript:history.back()" class="back-btn">← Back</a>
     
     <div class="loading" id="loading">Loading 3D Model...</div>
     
-    <!-- QR Container - Desktop Only (Top Right) -->
+    <!-- QR Container - Desktop Only -->
     <div class="qr-container">
         <div class="label">📱 SCAN TO VIEW ON PHONE</div>
         <div id="qrcode"></div>
-        <div class="model-name" id="modelName"></div>
+        <div class="model-name" id="modelName">Panasonic</div>
     </div>
     
     <model-viewer 
@@ -190,14 +179,14 @@
         loading="eager"
         reveal="auto">
         
-        <!-- AR Button - Will show on mobile -->
+        <!-- AR Button - This WILL show on mobile -->
         <button slot="ar-button" class="ar-button">
             📱 VIEW IN YOUR SPACE
         </button>
     </model-viewer>
     
 <script>
-    // Map SKU codes to actual filenames in your GitHub
+    // Map SKU codes to actual filenames
     const modelMap = {
         "CAR-SPL00001": "carrier_aura_inverter_1-1.5hp.glb",
         "DAI-SPL00001": "daikin-D-Series-FTKQ25BVA-1HP.glb",
@@ -209,87 +198,86 @@
         "WAM632IGT": "fujidenzo-wam632igt.glb"
     };
     
-    // Get model from URL parameter
+    // Get model from URL
     const urlParams = new URLSearchParams(window.location.search);
-    let sku = urlParams.get('model');
+    let sku = urlParams.get('model') || "CAR-SPL00001";
     
-    // If no SKU in URL, try to get from path or use default
-    if (!sku) {
-        const pathParts = window.location.pathname.split('/');
-        const lastPart = pathParts[pathParts.length - 1];
-        if (lastPart && lastPart.includes('?')) {
-            // Already handled
-        } else {
-            sku = "CAR-SPL00001";
-        }
-    }
+    // Get filename
+    const filename = modelMap[sku] || "carrier_aura_inverter_1-1.5hp.glb";
     
-    // Check if SKU exists in map, if not use default
-    if (!modelMap[sku]) {
-        console.log(`SKU ${sku} not found in map, using default`);
-        sku = "CAR-SPL00001";
-    }
+    // Display model name
+    document.getElementById('modelName').textContent = sku;
     
-    // Get actual filename from map
-    const filename = modelMap[sku];
-    
-    // Display model name in QR
-    document.getElementById('modelName').textContent = `SKU: ${sku}`;
-    
-    // Set the model in model-viewer
+    // Load model
     const viewer = document.getElementById('viewer');
     const loading = document.getElementById('loading');
     
-    // Construct the correct URL with the actual filename
-    const modelUrl = `https://markbr123.github.io/ar-models/${filename}`;
-    console.log('Loading model from:', modelUrl);
+    // Try different paths
+    const paths = [
+        `https://markbr123.github.io/ar-models/${filename}`,
+        `https://markbr123.github.io/ar-models/models/${filename}`,
+        `https://markbr123.github.io/ar-models/ar-models/${filename}`
+    ];
     
-    // Load the model
-    viewer.src = modelUrl;
+    let currentPathIndex = 0;
+    
+    function tryLoadModel() {
+        if (currentPathIndex >= paths.length) {
+            loading.textContent = '❌ Model not found';
+            loading.style.background = 'rgba(255,0,0,0.7)';
+            return;
+        }
+        
+        const modelUrl = paths[currentPathIndex];
+        console.log(`Trying path ${currentPathIndex + 1}:`, modelUrl);
+        loading.textContent = `Loading model... (${currentPathIndex + 1}/${paths.length})`;
+        
+        viewer.src = modelUrl;
+    }
     
     viewer.addEventListener('load', () => {
         console.log('✅ Model loaded!');
         loading.style.display = 'none';
     });
     
-    viewer.addEventListener('error', (e) => {
-        console.error('❌ Failed to load:', modelUrl);
-        loading.textContent = `❌ Failed to load model`;
-        loading.style.background = 'rgba(255,0,0,0.7)';
-        
-        // Try alternative path if file not found
-        const altUrl = `https://markbr123.github.io/ar-models/models/${filename}`;
-        console.log('Trying alternative path:', altUrl);
-        viewer.src = altUrl;
+    viewer.addEventListener('error', () => {
+        currentPathIndex++;
+        tryLoadModel();
     });
     
-    // Generate QR code for desktop users
+    // Start loading
+    tryLoadModel();
+    
+    // Generate QR code
     function generateQR(sku) {
         const qrContainer = document.getElementById("qrcode");
         if (!qrContainer) return;
         
         qrContainer.innerHTML = "";
-        
-        // QR code uses the same URL format
         const currentUrl = `https://markbr123.github.io/ar-models/ar-viewer.html?model=${sku}`;
         
         new QRCode(qrContainer, {
             text: currentUrl,
-            width: 180,
-            height: 180,
+            width: 170,
+            height: 170,
             correctLevel: QRCode.CorrectLevel.H
         });
     }
     
     generateQR(sku);
     
-    // Force AR button to be visible on mobile
+    // FORCE AR BUTTON TO SHOW ON MOBILE
     if (window.innerWidth <= 768) {
-        console.log('Mobile device detected, AR button should be visible');
-        const arBtn = document.querySelector('.ar-button');
-        if (arBtn) {
-            arBtn.style.display = 'block';
-        }
+        console.log('📱 Mobile detected - forcing AR button');
+        setTimeout(() => {
+            const arBtn = document.querySelector('.ar-button');
+            if (arBtn) {
+                arBtn.style.display = 'block';
+                arBtn.style.visibility = 'visible';
+                arBtn.style.opacity = '1';
+                console.log('✅ AR button forced visible');
+            }
+        }, 1000);
     }
 </script>
 </body>
