@@ -37,22 +37,34 @@ model-viewer {
 /* QR container for desktop */
 .qr-container {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.75);
-    padding: 20px;
-    border-radius: 15px;
+    top: 20px;
+    right: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
     text-align: center;
-    color: white;
+    color: black;
     z-index: 200;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border: 2px solid #4a90e2;
 }
 
-/* Large QR */
+.qr-container div:first-child {
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Make QR code visible */
 #qrcode {
-    margin-top: 10px;
-    width: 220px !important;
-    height: 220px !important;
+    margin: 0 auto;
+    width: 200px !important;
+    height: 200px !important;
+}
+
+#qrcode img {
+    width: 100%;
+    height: 100%;
 }
 
 /* Hide QR on mobile (users will tap AR button instead) */
@@ -75,10 +87,11 @@ model-viewer {
     camera-controls
     auto-rotate
     shadow-intensity="0.5"
-    ar-placement="floor">
+    ar-placement="floor"
+    exposure="0.8">
 
     <button slot="ar-button" 
-        style="background:#4a90e2; color:white; border:none; border-radius:40px; padding:15px 30px; position:absolute; bottom:30px; left:50%; transform:translateX(-50%);">
+        style="background:#4a90e2; color:white; border:none; border-radius:40px; padding:15px 30px; position:absolute; bottom:30px; left:50%; transform:translateX(-50%); font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.5);">
         📱 VIEW IN AR
     </button>
 
@@ -86,15 +99,16 @@ model-viewer {
 
 <!-- QR CODE -->
 <div class="qr-container">
-    <div>Scan for AR</div>
+    <div>📱 Scan to View in AR</div>
     <div id="qrcode"></div>
+    <div style="font-size:12px; margin-top:8px; color:#666;" id="modelName"></div>
 </div>
 
 <script>
 // List of allowed models
 const allowedModels = [
     "CAR-SPL00001",
-    "DAI-SPL00001",
+    "DAI-SPL00001", 
     "KOP-SPL00001",
     "LGC-SPL00001",
     "PAN-SPL00001"
@@ -106,30 +120,46 @@ let model = urlParams.get('model');
 
 // Validate model
 if (!model || !allowedModels.includes(model)) {
-    alert('No valid model specified. Defaulting to CAR-SPL00001.');
+    console.warn('Invalid model, using default');
     model = "CAR-SPL00001";
 }
 
+// Display model name
+document.getElementById('modelName').textContent = model;
+
 // Set the model in model-viewer
 const viewer = document.getElementById('viewer');
-viewer.src = `https://markbr123.github.io/ar-models/models/${model}.glb`;
+const modelUrl = `https://markbr123.github.io/ar-models/models/${model}.glb`;
+viewer.src = modelUrl;
 
-// Generate QR code pointing to the live URL
+// Generate QR code pointing to this exact page with model parameter
 function generateQR(modelName) {
     const qrContainer = document.getElementById("qrcode");
     qrContainer.innerHTML = ""; // Clear any previous QR
-    new QRCode(qrContainer, {
-        text: `https://markbr123.github.io/ar-models/ar-viewer.html?model=${modelName}`,
-        width: 220,
-        height: 220
-    });
+    
+    // Get the current page URL with the model parameter
+    const currentUrl = window.location.href;
+    
+    try {
+        new QRCode(qrContainer, {
+            text: currentUrl,
+            width: 200,
+            height: 200,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H // Better error correction
+        });
+        console.log("QR generated for:", currentUrl);
+    } catch (error) {
+        console.error("QR generation failed:", error);
+    }
 }
 
 // Generate QR for current model
-generateQR(model);
+setTimeout(() => generateQR(model), 500);
 
-// OPTIONAL: You can allow model switching dynamically
-// For example, you could add buttons to switch models and call generateQR(newModel)
+// Optional: Test if QR library loaded
+console.log("QRCode library loaded:", typeof QRCode !== 'undefined');
 </script>
 
 </body>
