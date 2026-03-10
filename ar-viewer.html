@@ -9,7 +9,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <style>
-body { margin: 0; overflow: hidden; background: #030c1a; }
+body { 
+    margin: 0; 
+    overflow: hidden; 
+    background: #030c1a; 
+    font-family: Arial, sans-serif;
+}
 
 model-viewer { 
     width: 100%; 
@@ -19,7 +24,7 @@ model-viewer {
 .back-btn {
     position: absolute; 
     top: 20px; 
-
+    left: 20px;
     background: rgba(0,0,0,0.7); 
     color: white;
     padding: 10px 20px; 
@@ -29,73 +34,80 @@ model-viewer {
     border: 1px solid #4a90e2;
 }
 
+/* QR container for desktop */
 .qr-container {
-    position: fixed;                /* stays in place */
-    top: 50%;                       /* vertical center */
-    left: 50%;                      /* horizontal center */
-    transform: translate(-50%, -50%);  /* truly center it */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: rgba(0,0,0,0.75);
-    padding: 20px;                  /* more padding for large QR */
+    padding: 20px;
     border-radius: 15px;
     text-align: center;
     color: white;
     z-index: 200;
 }
 
+/* Large QR */
 #qrcode {
     margin-top: 10px;
-    width: 200px !important;        /* bigger QR code */
-    height: 200px !important;
+    width: 220px !important;
+    height: 220px !important;
+}
+
+/* Hide QR on mobile (users will tap AR button instead) */
+@media (max-width: 768px) {
+    .qr-container {
+        display: none;
+    }
 }
 </style>
 
 </head>
-
 <body>
 
 <a href="javascript:history.back()" class="back-btn">← Back</a>
 
 <model-viewer 
-id="viewer"
-ar
-ar-modes="webxr quick-look"
-camera-controls
-auto-rotate
-shadow-intensity="0.5"
-ar-placement="floor">
+    id="viewer"
+    ar
+    ar-modes="webxr quick-look"
+    camera-controls
+    auto-rotate
+    shadow-intensity="0.5"
+    ar-placement="floor">
 
-<button slot="ar-button" 
-style="background:#4a90e2; color:white; border:none; border-radius:40px; padding:15px 30px; position:absolute; bottom:30px; left:50%; transform:translateX(-50%);">
-📱 VIEW IN AR
-</button>
+    <button slot="ar-button" 
+        style="background:#4a90e2; color:white; border:none; border-radius:40px; padding:15px 30px; position:absolute; bottom:30px; left:50%; transform:translateX(-50%);">
+        📱 VIEW IN AR
+    </button>
 
 </model-viewer>
 
 <!-- QR CODE -->
 <div class="qr-container">
-<div>Scan for AR</div>
-<div id="qrcode"></div>
+    <div>Scan for AR</div>
+    <div id="qrcode"></div>
 </div>
 
 <script>
-
 // Get model from URL parameter
 const urlParams = new URLSearchParams(window.location.search);
 const model = urlParams.get('model');
 
-if (model) {
+if (!model) {
+    alert('No model specified');
+} else {
     const viewer = document.getElementById('viewer');
     viewer.src = `https://markbr123.github.io/ar-models/models/${model}.glb`;
-} else {
-    alert('No model specified');
+
+    // Generate QR code pointing to the live GitHub Pages URL for this model
+    new QRCode(document.getElementById("qrcode"), {
+        text: `https://markbr123.github.io/ar-models/ar-viewer.html?model=${model}`,
+        width: 220,
+        height: 220
+    });
 }
-
-new QRCode(document.getElementById("qrcode"), {
-    text: window.location.href,
-    width: 200,
-    height: 200
-});
-
 </script>
 
 </body>
