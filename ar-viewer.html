@@ -104,7 +104,14 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
             backdrop-filter: blur(5px) !important;
             cursor: pointer !important;
-            display: inline-block !important;
+            display: block !important;
+            margin: 0 auto !important;
+            width: fit-content !important;
+            position: absolute !important;
+            bottom: 30px !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: 10 !important;
         }
 
         /* Mobile optimization */
@@ -154,13 +161,14 @@
 <script>
     // Map SKU codes to actual filenames in your GitHub
     const modelMap = {
-        "CAR-SPL00001": "CAR-SPL00001.glb",
+        "CAR-SPL00001": "carrier_aura_inverter_1-1.5hp.glb",
         "DAI-SPL00001": "daikin-D-Series-FTKQ25BVA-1HP.glb",
-        "KOP-SPL00001": "KOP-SPL00001.glb",
-        "LGC-SPL00001": "LGC-SPL00001.glb",
+        "KOP-SPL00001": "kolin-certus-premium-1.5hp.glb",
+        "LGC-SPL00001": "lg_dual_inverter_premium.glb",
         "PAN-SPL00001": "panasonic_premium_inverter_xu_series_1-1.5hp.glb",
         "KAM-55CMC32": "KAM-55CMC32.glb",
-        "WAR100IGT": "fujidenzo_war100igt_with_remote.glb"
+        "WAR100IGT": "fujidenzo_war100igt_with_remote.glb",
+        "WAM632IGT": "fujidenzo-wam632igt.glb"
     };
     
     // Get model from URL parameter
@@ -198,6 +206,11 @@
         console.error('❌ Failed to load:', modelUrl);
         loading.textContent = `❌ Failed to load: ${filename}`;
         loading.style.background = 'rgba(255,0,0,0.7)';
+        
+        // Try alternative path if file not found
+        const altUrl = `https://markbr123.github.io/ar-models/models/${filename}`;
+        console.log('Trying alternative path:', altUrl);
+        viewer.src = altUrl;
     });
     
     // Generate QR code for desktop users
