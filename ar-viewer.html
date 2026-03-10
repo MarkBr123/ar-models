@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
@@ -91,23 +91,45 @@ model-viewer {
 </div>
 
 <script>
+// List of allowed models
+const allowedModels = [
+    "CAR-SPL00001",
+    "DAI-SPL00001",
+    "KOP-SPL00001",
+    "LGC-SPL00001",
+    "PAN-SPL00001"
+];
+
 // Get model from URL parameter
 const urlParams = new URLSearchParams(window.location.search);
-const model = urlParams.get('model');
+let model = urlParams.get('model');
 
-if (!model) {
-    alert('No model specified');
-} else {
-    const viewer = document.getElementById('viewer');
-    viewer.src = `https://markbr123.github.io/ar-models/models/${model}.glb`;
+// Validate model
+if (!model || !allowedModels.includes(model)) {
+    alert('No valid model specified. Defaulting to CAR-SPL00001.');
+    model = "CAR-SPL00001";
+}
 
-    // Generate QR code pointing to the live GitHub Pages URL for this model
-    new QRCode(document.getElementById("qrcode"), {
-        text: `https://markbr123.github.io/ar-models/ar-viewer.html?model=${model}`,
+// Set the model in model-viewer
+const viewer = document.getElementById('viewer');
+viewer.src = `https://markbr123.github.io/ar-models/models/${model}.glb`;
+
+// Generate QR code pointing to the live URL
+function generateQR(modelName) {
+    const qrContainer = document.getElementById("qrcode");
+    qrContainer.innerHTML = ""; // Clear any previous QR
+    new QRCode(qrContainer, {
+        text: `https://markbr123.github.io/ar-models/ar-viewer.html?model=${modelName}`,
         width: 220,
         height: 220
     });
 }
+
+// Generate QR for current model
+generateQR(model);
+
+// OPTIONAL: You can allow model switching dynamically
+// For example, you could add buttons to switch models and call generateQR(newModel)
 </script>
 
 </body>
