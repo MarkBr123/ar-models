@@ -111,84 +111,70 @@
         <div class="model-name" id="modelName"></div>
     </div>
     
-    <script>
-
-// Map SKU codes to actual filenames in your GitHub
-const modelMap = {
-    "CAR-SPL00001": "CAR-SPL00001.glb",
-    "DAI-SPL00001": "daikin-D-Series-FTKQ25BVA-1Hp.glb",  // Updated
-    "KOP-SPL00001": "KOP-SPL00001.glb",
-    "LGC-SPL00001": "LGC-SPL00001.glb",
-    "PAN-SPL00001": "panasonic_premium_inverter_xu_series_1-1.5hp.glb"  // Updated
-};
-        // Get model from URL parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        let sku = urlParams.get('model');
+<script>
+    // Map SKU codes to actual filenames in your GitHub
+    const modelMap = {
+        "CAR-SPL00001": "CAR-SPL00001.glb",
+        "DAI-SPL00001": "daikin-D-Series-FTKQ25BVA-1HP.glb",  // Updated with correct filename
+        "KOP-SPL00001": "KOP-SPL00001.glb",
+        "LGC-SPL00001": "LGC-SPL00001.glb",
+        "PAN-SPL00001": "panasonic_premium_inverter_xu_series_1-1.5hp.glb"
+    };
+    
+    // Get model from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    let sku = urlParams.get('model');
+    
+    // Default if no model specified
+    if (!sku || !modelMap[sku]) {
+        sku = "CAR-SPL00001";
+    }
+    
+    // Get actual filename from map
+    const filename = modelMap[sku];
+    
+    // Display model name
+    document.getElementById('modelName').textContent = sku;
+    
+    // Set the model in model-viewer
+    const viewer = document.getElementById('viewer');
+    const loading = document.getElementById('loading');
+    
+    // Construct the correct URL with the actual filename
+    const modelUrl = `https://markbr123.github.io/ar-models/models/${filename}`;
+    console.log('Loading model from:', modelUrl);
+    
+    // Load the model
+    viewer.src = modelUrl;
+    
+    viewer.addEventListener('load', () => {
+        console.log('✅ Model loaded!');
+        loading.style.display = 'none';
+    });
+    
+    viewer.addEventListener('error', (e) => {
+        console.error('❌ Failed to load:', modelUrl);
+        loading.textContent = `❌ Failed to load: ${filename}`;
+        loading.style.background = 'rgba(255,0,0,0.7)';
+    });
+    
+    // Generate QR code
+    function generateQR(sku) {
+        const qrContainer = document.getElementById("qrcode");
+        qrContainer.innerHTML = "";
         
-        // Default if no model specified
-        if (!sku || !modelMap[sku]) {
-            sku = "CAR-SPL00001";
-        }
+        // QR code still uses the SKU, not the filename
+        const currentUrl = `https://markbr123.github.io/ar-models/ar-viewer.html?model=${sku}`;
         
-        // Get actual filename from map
-        const filename = modelMap[sku] || `${sku}.glb`;
-        
-        // Display model name
-        document.getElementById('modelName').textContent = sku;
-        
-        // Set the model in model-viewer
-        const viewer = document.getElementById('viewer');
-        const loading = document.getElementById('loading');
-        
-        // Try multiple paths
-        const paths = [
-            `https://markbr123.github.io/ar-models/models/${filename}`,
-            `https://markbr123.github.io/ar-models/${filename}`,
-            `https://markbr123.github.io/ar-models/models/${sku}.glb`
-        ];
-        
-        let pathIndex = 0;
-        
-        function loadNextPath() {
-            if (pathIndex < paths.length) {
-                console.log('Loading:', paths[pathIndex]);
-                viewer.src = paths[pathIndex];
-                pathIndex++;
-            } else {
-                loading.textContent = '❌ Model not found';
-                loading.style.background = 'rgba(255,0,0,0.7)';
-            }
-        }
-        
-        viewer.addEventListener('load', () => {
-            console.log('✅ Model loaded!');
-            loading.style.display = 'none';
+        new QRCode(qrContainer, {
+            text: currentUrl,
+            width: 220,
+            height: 220,
+            correctLevel: QRCode.CorrectLevel.H
         });
-        
-        viewer.addEventListener('error', () => {
-            console.log('❌ Failed, trying next path...');
-            loadNextPath();
-        });
-        
-        // Start loading
-        loadNextPath();
-        
-        // Generate QR code
-        function generateQR(sku) {
-            const qrContainer = document.getElementById("qrcode");
-            qrContainer.innerHTML = "";
-            
-            const currentUrl = `https://markbr123.github.io/ar-models/ar-viewer.html?model=${sku}`;
-            
-            new QRCode(qrContainer, {
-                text: currentUrl,
-                width: 220,
-                height: 220,
-                correctLevel: QRCode.CorrectLevel.H
-            });
-        }
-        
-        generateQR(sku);
-    </script>
+    }
+    
+    generateQR(sku);
+</script>
 </body>
 </html>
