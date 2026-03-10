@@ -13,14 +13,19 @@
     <style>
         body { 
             margin: 0; 
+            padding: 0;
             overflow: hidden; 
             background: #030c1a; 
             font-family: Arial, sans-serif;
+            height: 100vh;
+            width: 100vw;
         }
         
         model-viewer { 
             width: 100%; 
             height: 100vh; 
+            --progress-bar-color: #4a90e2;
+            --progress-bar-height: 5px;
         }
         
         .back-btn {
@@ -32,9 +37,12 @@
             padding: 10px 20px; 
             border-radius: 30px;
             text-decoration: none; 
-            z-index: 100;
+            z-index: 1000;
             border: 1px solid #4a90e2;
             font-size: 14px;
+            font-weight: 500;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
         
         /* QR Container - Top Right for Desktop */
@@ -46,7 +54,7 @@
             padding: 15px;
             border-radius: 12px;
             text-align: center;
-            z-index: 200;
+            z-index: 1000;
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             border: 2px solid #4a90e2;
             width: 200px;
@@ -82,50 +90,79 @@
 
         .loading {
             position: absolute;
-            bottom: 50%;
+            top: 50%;
             left: 50%;
-            transform: translate(-50%, 50%);
+            transform: translate(-50%, -50%);
             color: white;
-            background: rgba(0,0,0,0.7);
-            padding: 10px 20px;
-            border-radius: 30px;
-            z-index: 150;
+            background: rgba(0,0,0,0.8);
+            padding: 12px 24px;
+            border-radius: 40px;
+            z-index: 500;
+            font-size: 14px;
+            border: 1px solid #4a90e2;
         }
 
-        /* AR Button Styling - This is the key part */
+        /* AR Button Styling - FIXED for mobile */
         .ar-button {
             background: #4a90e2 !important;
             color: white !important;
             border: 2px solid white !important;
             border-radius: 40px !important;
-            padding: 15px 30px !important;
-            font-size: 16px !important;
+            padding: 16px 32px !important;
+            font-size: 18px !important;
             font-weight: bold !important;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
-            backdrop-filter: blur(5px) !important;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6) !important;
             cursor: pointer !important;
             display: block !important;
             margin: 0 auto !important;
-            width: fit-content !important;
-            position: absolute !important;
+            width: auto !important;
+            min-width: 200px !important;
+            position: fixed !important;
             bottom: 30px !important;
             left: 50% !important;
             transform: translateX(-50%) !important;
-            z-index: 10 !important;
+            z-index: 2000 !important;
+            text-align: center !important;
+            backdrop-filter: blur(5px) !important;
+            -webkit-backdrop-filter: blur(5px) !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .ar-button:hover {
+            background: #3570b0 !important;
+            transform: translateX(-50%) scale(1.05) !important;
         }
 
         /* Mobile optimization */
         @media (max-width: 768px) {
             .ar-button {
-                padding: 12px 24px !important;
-                font-size: 14px !important;
-                bottom: 20px !important;
+                padding: 14px 28px !important;
+                font-size: 16px !important;
+                min-width: 180px !important;
+                bottom: 25px !important;
             }
             
             .back-btn {
                 font-size: 12px;
                 padding: 8px 16px;
+                top: 15px;
+                left: 15px;
             }
+        }
+
+        /* Small phones */
+        @media (max-width: 380px) {
+            .ar-button {
+                padding: 12px 24px !important;
+                font-size: 14px !important;
+                min-width: 160px !important;
+                bottom: 20px !important;
+            }
+        }
+
+        /* Make sure model-viewer doesn't block the button */
+        model-viewer::part(default-ar-button) {
+            display: none !important;
         }
     </style>
 </head>
@@ -150,7 +187,8 @@
         shadow-intensity="0.5"
         ar-placement="floor"
         exposure="0.8"
-        loading="eager">
+        loading="eager"
+        reveal="auto">
         
         <!-- AR Button - Will show on mobile -->
         <button slot="ar-button" class="ar-button">
@@ -175,8 +213,20 @@
     const urlParams = new URLSearchParams(window.location.search);
     let sku = urlParams.get('model');
     
-    // Default if no model specified
-    if (!sku || !modelMap[sku]) {
+    // If no SKU in URL, try to get from path or use default
+    if (!sku) {
+        const pathParts = window.location.pathname.split('/');
+        const lastPart = pathParts[pathParts.length - 1];
+        if (lastPart && lastPart.includes('?')) {
+            // Already handled
+        } else {
+            sku = "CAR-SPL00001";
+        }
+    }
+    
+    // Check if SKU exists in map, if not use default
+    if (!modelMap[sku]) {
+        console.log(`SKU ${sku} not found in map, using default`);
         sku = "CAR-SPL00001";
     }
     
@@ -204,7 +254,7 @@
     
     viewer.addEventListener('error', (e) => {
         console.error('❌ Failed to load:', modelUrl);
-        loading.textContent = `❌ Failed to load: ${filename}`;
+        loading.textContent = `❌ Failed to load model`;
         loading.style.background = 'rgba(255,0,0,0.7)';
         
         // Try alternative path if file not found
@@ -216,6 +266,8 @@
     // Generate QR code for desktop users
     function generateQR(sku) {
         const qrContainer = document.getElementById("qrcode");
+        if (!qrContainer) return;
+        
         qrContainer.innerHTML = "";
         
         // QR code uses the same URL format
@@ -230,6 +282,15 @@
     }
     
     generateQR(sku);
+    
+    // Force AR button to be visible on mobile
+    if (window.innerWidth <= 768) {
+        console.log('Mobile device detected, AR button should be visible');
+        const arBtn = document.querySelector('.ar-button');
+        if (arBtn) {
+            arBtn.style.display = 'block';
+        }
+    }
 </script>
 </body>
 </html>
