@@ -31,24 +31,21 @@ model-viewer {
 
 .qr-container {
     position: fixed;                /* stays in place */
-    bottom: 150px;                  /* above the AR button */
-    left: 50%;                      /* center horizontally */
-    transform: translateX(-50%);    /* exact center */
+    top: 50%;                       /* vertical center */
+    left: 50%;                      /* horizontal center */
+    transform: translate(-50%, -50%);  /* truly center it */
     background: rgba(0,0,0,0.75);
-    padding: 12px;
-    border-radius: 10px;
+    padding: 20px;                  /* more padding for large QR */
+    border-radius: 15px;
     text-align: center;
     color: white;
     z-index: 200;
 }
 
-@media (max-width: 768px) {
-    .qr-container {
-        right: auto;        /* center on small screens */
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 100px;      /* move above AR button */
-    }
+#qrcode {
+    margin-top: 10px;
+    width: 200px !important;        /* bigger QR code */
+    height: 200px !important;
 }
 </style>
 
