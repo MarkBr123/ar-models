@@ -1,0 +1,15 @@
+postgresql://arcon_db_user:NTa14fwUh7O4wq5eKCBxJb3sSLbKQ1Vz@dpg-d7oethosfn5c739bjk10-a.singapore-postgres.render.com/arcon_db
+
+
+UPDATE products 
+SET ar_url = CASE 
+    WHEN product_model = '42/38CEP009308-1' THEN 'https://airconi-trading.com/ar/launch?productModel=CAR-SPL00001&name=' || REPLACE(COALESCE(product_series, product_model), ' ', '%20')
+    WHEN product_model = 'CS/CU-RU9AKQ' THEN 'https://airconi-trading.com/ar/launch?productModel=PAN-SPL00002&name=' || REPLACE(COALESCE(product_series, product_model), ' ', '%20')
+    WHEN product_model = 'FTKC71AVA / RKC71AVA' THEN 'https://airconi-trading.com/ar/launch?productModel=DAI-SPL00009&name=' || REPLACE(COALESCE(product_series, product_model), ' ', '%20')
+    WHEN product_model = 'FTKC60AVA / RKC60AVA' THEN 'https://airconi-trading.com/ar/launch?productModel=DAI-SPL00007&name=' || REPLACE(COALESCE(product_series, product_model), ' ', '%20')
+    WHEN product_model = 'FTKC50AVA / RKC50AVA' THEN 'https://airconi-trading.com/ar/launch?productModel=DAI-SPL00005&name=' || REPLACE(COALESCE(product_series, product_model), ' ', '%20')
+    WHEN product_model = 'FTKC35AVA/RKC35AVA' THEN 'https://airconi-trading.com/ar/launch?productModel=DAI-SPL00003&name=' || REPLACE(COALESCE(product_series, product_model), ' ', '%20')
+    WHEN product_model = 'FTKC25AVA/RKC25AVA' THEN 'https://airconi-trading.com/ar/launch?productModel=DAI-SPL00002&name=' || REPLACE(COALESCE(product_series, product_model), ' ', '%20')
+    ELSE 'https://airconi-trading.com/ar/launch?productModel=' || REPLACE(product_model, ' ', '%20') || '&name=' || REPLACE(COALESCE(product_series, product_model), ' ', '%20')
+END
+WHERE ar_url IS NOT NULL;
