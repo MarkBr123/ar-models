@@ -1,4 +1,3 @@
-postgresql://arcon_db_user:NTa14fwUh7O4wq5eKCBxJb3sSLbKQ1Vz@dpg-d7oethosfn5c739bjk10-a.singapore-postgres.render.com/arcon_db
 
 
 UPDATE products 
